@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">CV<strong>Studio</strong></span>
+    </div>
+    <nav class="header-nav">
+      <button class="btn-nav active" data-tab="editor">✏️ Éditeur</button>
+      <button class="btn-nav" data-tab="preview">👁 Aperçu</button>
+    </nav>
+    <div class="header-actions">
+      <button id="btnExportPDF" class="btn-primary">⬇ Exporter PDF</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN LAYOUT ===== -->
+<main class="app-main">
+
+  <!-- LEFT PANEL: FORM -->
+  <aside class="panel-form" id="panelForm">
+
+    <!-- Template selector -->
+    <section class="form-section template-section">
+      <h2 class="section-title">🎨 Modèle de CV</h2>
+      <div class="template-grid">
+        <label class="template-card active" data-template="modern">
+          <input type="radio" name="template" value="modern" checked hidden />
+          <div class="template-thumb modern-thumb">
+            <div class="t-header"></div>
+            <div class="t-body"><div class="t-line"></div><div class="t-line short"></div><div class="t-line"></div></div>
+          </div>
+          <span>Moderne</span>
+        </label>
+        <label class="template-card" data-template="classic">
+          <input type="radio" name="template" value="classic" hidden />
+          <div class="template-thumb classic-thumb">
+            <div class="t-sidebar"></div>
+            <div class="t-body"><div class="t-line"></div><div class="t-line short"></div><div class="t-line"></div></div>
+          </div>
+          <span>Classique</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Infos personnelles -->
+    <section class="form-section" id="section-personal">
+      <h2 class="section-title">👤 Informations personnelles</h2>
+
+      <!-- Photo de profil -->
+      <div class="photo-upload-area">
+        <div class="photo-preview-wrap">
+          <div class="photo-preview" id="photoPreview">
+            <span class="photo-placeholder-icon">📷</span>
+          </div>
+          <div class="photo-controls">
+            <label class="btn-upload-photo" for="photoInput">
+              📂 Choisir une photo
+            </label>
+            <input type="file" id="photoInput" accept="image/*" hidden />
+            <button type="button" class="btn-remove-photo" id="btnRemovePhoto" style="display:none">
+              ✕ Supprimer
+            </button>
+            <p class="photo-hint">JPG, PNG, WEBP · Max 2 Mo<br>Recommandé : 300×300 px</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Prénom <span class="req">*</span></label>
+          <input type="text" id="firstName" placeholder="Aminata" data-required />
+          <span class="error-msg" id="err-firstName"></span>
+        </div>
+        <div class="form-field">
+          <label>Nom <span class="req">*</span></label>
+          <input type="text" id="lastName" placeholder="Diallo" data-required />
+          <span class="error-msg" id="err-lastName"></span>
+        </div>
+        <div class="form-field full">
+          <label>Titre professionnel <span class="req">*</span></label>
+          <input type="text" id="jobTitle" placeholder="Développeuse Web Full Stack" data-required />
+          <span class="error-msg" id="err-jobTitle"></span>
+        </div>
+        <div class="form-field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="aminata@example.com" data-required data-validate="email" />
+          <span class="error-msg" id="err-email"></span>
+        </div>
+        <div class="form-field">
+          <label>Téléphone (SN) <span class="req">*</span></label>
+          <input type="tel" id="phone" placeholder="77 123 45 67" data-required data-validate="phone" />
+          <span class="error-msg" id="err-phone"></span>
+        </div>
+        <div class="form-field">
+          <label>Ville</label>
+          <input type="text" id="city" placeholder="Dakar" />
+        </div>
+        <div class="form-field">
+          <label>LinkedIn</label>
+          <input type="url" id="linkedin" placeholder="linkedin.com/in/aminata" />
+        </div>
+        <div class="form-field full">
+          <label>Mot de passe du CV <span class="req">*</span></label>
+          <div class="password-wrap">
+            <input type="password" id="cvPassword" placeholder="Min. 6 caractères" data-required data-validate="password" />
+            <button type="button" class="toggle-pwd" id="togglePwd">👁</button>
+          </div>
+          <span class="error-msg" id="err-cvPassword"></span>
+        </div>
+        <div class="form-field full">
+          <label>Résumé professionnel</label>
+          <textarea id="summary" rows="3" placeholder="Décrivez brièvement votre profil..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Expériences -->
+    <section class="form-section" id="section-experience">
+      <div class="section-header-row">
+        <h2 class="section-title">💼 Expériences professionnelles</h2>
+        <button class="btn-add" id="btnAddExp">+ Ajouter</button>
+      </div>
+      <div id="experienceList" class="dynamic-list"></div>
+    </section>
+
+    <!-- Formations -->
+    <section class="form-section" id="section-education">
+      <div class="section-header-row">
+        <h2 class="section-title">🎓 Formations</h2>
+        <button class="btn-add" id="btnAddEdu">+ Ajouter</button>
+      </div>
+      <div id="educationList" class="dynamic-list"></div>
+    </section>
+
+    <!-- Compétences -->
+    <section class="form-section" id="section-skills">
+      <div class="section-header-row">
+        <h2 class="section-title">⚡ Compétences</h2>
+        <button class="btn-add" id="btnAddSkill">+ Ajouter</button>
+      </div>
+      <div id="skillsList" class="dynamic-list"></div>
+    </section>
+
+    <!-- Centres d'intérêt -->
+    <section class="form-section" id="section-interests">
+      <div class="section-header-row">
+        <h2 class="section-title">🌟 Centres d'intérêt</h2>
+        <button class="btn-add" id="btnAddInterest">+ Ajouter</button>
+      </div>
+      <div id="interestsList" class="dynamic-list"></div>
+    </section>
+
+    <!-- Generate -->
+    <div class="form-actions">
+      <button id="btnGenerate" class="btn-generate">Générer le CV →</button>
+      <button id="btnReset" class="btn-reset">🗑 Réinitialiser</button>
+    </div>
+
+  </aside>
+
+  <!-- RIGHT PANEL: PREVIEW -->
+  <div class="panel-preview" id="panelPreview">
+    <div class="preview-toolbar">
+      <span class="preview-label">Aperçu en temps réel</span>
+      <div class="template-pills">
+        <button class="pill active" data-template="modern">Moderne</button>
+        <button class="pill" data-template="classic">Classique</button>
+      </div>
+    </div>
+    <div class="preview-wrapper">
+      <div id="cvPreview" class="cv-document template-modern">
+        <div class="cv-placeholder">
+          <span>◈</span>
+          <p>Remplissez le formulaire pour voir votre CV s'afficher ici en temps réel.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== TOAST ===== -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- Scripts -->
+<script src="js/data.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
